@@ -117,11 +117,11 @@ opitmized_RF_function <- function(data,
       if(phylo==TRUE){
       names1 <- colnames(data)[colnames(data) %in% colnames(trait_data)]
       names2 <- paste("eig", 1:hyper_grid$PEMs[i], sep = "")
-      data_new <- data[c(response_data, names1, names2)]
+      data_new <- data[c(species, response_data, names1, names2)]}
      if(phylo==FALSE){
       data_new <- data }
-      formula_new <- as.formula(paste0(response_data, " ~ ."))
-      fit <- ranger::ranger(formula = formula_new,
+
+      fit <- ranger::ranger(formula = formula,
                             data = data_new,
                             num.trees = hyper_grid$ntrees[i],
                             mtry = round(hyper_grid$mtry_frac[i]*n_features_new),
