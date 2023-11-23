@@ -10,11 +10,14 @@
 #' @export
 #'
 #' @examples
-build_hyperparameter_data <- function(mtry_frac='NULL',
+build_hyperparameter_dataframe <- function(mtry_frac='NULL',
                                       min.node.size='NULL',
                                       sample.fraction='NULL',
                                       ntrees='NULL',
-                                      wgt='NULL'){
+                                      wgt='NULL',
+                                      PEMs='NULL',
+                                      phylo){
+  if(phylo == FALSE){
   if(!is.null(mtry_frac)){mtry_frac <- c(.05, .15, .25, .333, .4, .6)}
   if(!is.null(min.node.size)){min.node.size <- c(1, 3, 5, 10, 20, 30, 50, 75, 100)}
   if(!is.null(sample.fraction)){sample.fraction = c(.5, .6, .7)}
@@ -31,5 +34,25 @@ build_hyperparameter_data <- function(mtry_frac='NULL',
                                    mtry = mtry,
                                    rmse = rmse,
                                    wgt = wgt)
-  return(hyper_grid)
+  return(hyper_grid)}
+  if(phylo == TRUE){
+    if(!is.null(mtry_frac)){mtry_frac <- c(.05, .15, .25, .333, .4, .6)}
+    if(!is.null(min.node.size)){min.node.size <- c(1, 3, 5, 10, 20, 30, 50, 75, 100)}
+    if(!is.null(sample.fraction)){sample.fraction = c(.5, .6, .7)}
+    if(!is.null(ntrees)){ntrees <-seq(50,750,50)}
+    if(!is.null(wgt)){wgt <- c(1)}
+    if(!is.null(PEMs)){PEMs <- c(1)}
+    replace <- c(TRUE, FALSE)
+    mtry <- NA
+    rmse <- NA
+    hyper_grid <- base::expand.grid( mtry_frac = mtry_frac,
+                                     min.node.size = min.node.size,
+                                     replace = replace,
+                                     sample.fraction = sample.fraction,
+                                     ntrees = ntrees,
+                                     mtry = mtry,
+                                     rmse = rmse,
+                                     wgt = wgt,
+                                     PEMs=PEMs)
+    return(hyper_grid)}
 }
