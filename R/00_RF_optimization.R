@@ -93,9 +93,9 @@ opitmized_RF_function <- function(data,
 
       #adjust number of PEMs used
 
-      names1 <- colnames(data)[colnames(data) %in% colnames(trait_data)]
-
-      names2 <- paste("eig", 1:hyper_grid$PEMs[i], sep = "")
+      # names1 <- colnames(data)[colnames(data) %in% colnames(trait_data)]
+      #
+      # names2 <- paste("eig", 1:hyper_grid$PEMs[i], sep = "")
 
       fit <- ranger::ranger(formula = formula,
                             data = data,
@@ -111,11 +111,11 @@ opitmized_RF_function <- function(data,
       # export OOB error
       rmse[i] <- fit$prediction.error
       mtry[i] <- round(hyper_grid$mtry_frac[i]*n_features)
-      # print(i)
+      print(i)
 
     # }
 
-    }, parallel::detectCores() - 1)
+    }, mc.cores = parallel::detectCores() - 1)
 
 
 
