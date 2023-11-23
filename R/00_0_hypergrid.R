@@ -5,7 +5,9 @@
 #' @param sample.fraction numeric vector of values
 #' @param ntrees numeric vector of values
 #' @param wgt numeric vector of values
-#'
+#' @param PEMS numeric vector of values
+#' @param phylo TRUE or FALSE
+
 #' @return
 #' @export
 #'
@@ -56,3 +58,5 @@ build_hyperparameter_dataframe <- function(mtry_frac='NULL',
                                      PEMs=PEMs)
     return(hyper_grid)}
 }
+
+
