@@ -1,4 +1,4 @@
-#' Title
+#' Creation of scenarii to weight the observation for modelisation with random forest
 #'
 #' @param Y_obs numeric vector
 #' @param weight_for_non_prey numeric value
