@@ -72,13 +72,19 @@ opitmized_RF_function <- function(data,
                                   species,
                                   response_data,
                                   trait_data,
-                                  phylo_data,
+                                  phylo_data=NULL,
                                   method, # binary or regression
-                                  hyperparameter_list = NULL,
-                                  weight)
+                                  weight,
+                                  mtry_frac='NULL',
+                                  min.node.size='NULL',
+                                  sample.fraction='NULL',
+                                  ntrees='NULL',
+                                  wgt='NULL',
+                                  PEMs='NULL')
 
   {
-
+  if(is.null(phylo_data)){phylo<-FALSE}
+  else{phylo<-TRUE}
   n_features <- dim(data)[2]-2
 
   formula <- as.formula(paste0(response_data, " ~ .-", species))
@@ -97,30 +103,29 @@ opitmized_RF_function <- function(data,
 
   rmse <- vector()
   mtry <- vector()
+  hyper_grid <- build_hyperparameter_dataframe(
+      mtry_frac=mtry_frac,
+      min.node.size=min.node.size,
+      replace=replace,
+      sample.fraction=sample.fraction,
+      ntrees=ntrees,
+      PEMs=PEMs,
+      wgt=wgt,
+      phylo=phylo)
+
+
 
   test <- pbmcapply::pbmclapply(1:nrow(hyper_grid), function(i) {
 
-    if(is.null(hyperparameter_list)) {
-
-      hyper_grid <- expand.grid(
-        mtry_frac = c(.05, .15, .25, .333, .4, .6), #floor(n_features *
-        min.node.size = c(1, 3, 5, 10, 20, 30, 50, 75, 100),
-        replace = c(TRUE, FALSE),
-        sample.fraction = c(.5, .6, .7),
-        ntrees = seq(50,750,50),
-        PEMs = c(5,10,20),
-        wgt = 1)
-
-    }
-
-      #adjust number of PEMs used
-
+      if(phylo==TRUE){
       names1 <- colnames(data)[colnames(data) %in% colnames(trait_data)]
 
       names2 <- paste("eig", 1:hyper_grid$PEMs[i], sep = "")
 
       data <- data[colnames(data) %in% c(names1, names2)]
-
+      }
+     if(phylo==FALSE){
+      data <- data }
       fit <- ranger::ranger(formula = formula,
                             data = data,
                             num.trees = hyper_grid$ntrees[i],
