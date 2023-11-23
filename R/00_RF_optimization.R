@@ -83,8 +83,17 @@ opitmized_RF_function <- function(data,
                                   PEMs='NULL')
 
   {
-  if(is.null(phylo_data)){phylo<-FALSE}
-  else{phylo<-TRUE}
+
+  if(is.null(phylo_data)){
+
+    phylo<-FALSE
+
+  }else{
+
+    phylo<-TRUE
+
+  }
+
   n_features <- dim(data)[2]-2
 
   formula <- as.formula(paste0(response_data, " ~ .-", species))
@@ -114,12 +123,20 @@ opitmized_RF_function <- function(data,
       phylo=phylo)
 
   optimized_parameter <- pbmcapply::pbmclapply(1:nrow(hyper_grid), function(i) {
+
       if(phylo==TRUE){
+
       names1 <- colnames(data)[colnames(data) %in% colnames(trait_data)]
       names2 <- paste("eig", 1:hyper_grid$PEMs[i], sep = "")
-      data_new <- data[c(species, response_data, names1, names2)]}
-     if(phylo==FALSE){
-      data_new <- data }
+      data_new <- data[c(species, response_data, names1, names2)]
+
+      }
+
+      if(phylo==FALSE){
+
+      data_new <- data
+
+      }
 
       fit <- ranger::ranger(formula = formula,
                             data = data_new,
@@ -141,8 +158,6 @@ opitmized_RF_function <- function(data,
                                   mtry = mtry[i])
 
       return(final_objects)
-
-    # }
 
     }, mc.cores = parallel::detectCores() - 1)
 
