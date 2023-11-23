@@ -46,16 +46,27 @@ phylo_data <- colnames(ev400[-401])
 method <- "regression"
 
 hyper_grid <- expand.grid(
-  mtry_frac = c(.05), #floor(n_features *
-  min.node.size = c(1),
+  mtry_frac = c(.05, .15, .25), #floor(n_features *
+  min.node.size = c(1, 3, 5),
   replace = c(TRUE),
   sample.fraction = c(.5),
   ntrees = seq(50),
-  PEMs = c(5)
+  PEMs = c(5,10)
 )
+
+# hyper_grid <- expand.grid(
+#   mtry_frac = c(.05), #floor(n_features *
+#   min.node.size = c(1),
+#   replace = c(TRUE),
+#   sample.fraction = c(.5),
+#   ntrees = seq(50),
+#   PEMs = c(5)
+# )
 
 wgts <- all$response
 wgts.0 <- rep(1,length(wgts))
+
+hyperparameter_list <- NULL
 
 opitmized_RF_function <- function(data,
                                   species,
@@ -63,7 +74,7 @@ opitmized_RF_function <- function(data,
                                   trait_data,
                                   phylo_data,
                                   method, # binary or regression
-                                  hyperparameter_list,
+                                  hyperparameter_list = NULL,
                                   weight)
 
   {
@@ -89,13 +100,26 @@ opitmized_RF_function <- function(data,
 
   test <- pbmcapply::pbmclapply(1:nrow(hyper_grid), function(i) {
 
-    # if(hyperparameter_list == TRUE) {
+    if(is.null(hyperparameter_list)) {
+
+      hyper_grid <- expand.grid(
+        mtry_frac = c(.05, .15, .25, .333, .4, .6), #floor(n_features *
+        min.node.size = c(1, 3, 5, 10, 20, 30, 50, 75, 100),
+        replace = c(TRUE, FALSE),
+        sample.fraction = c(.5, .6, .7),
+        ntrees = seq(50,750,50),
+        PEMs = c(5,10,20),
+        wgt = 1)
+
+    }
 
       #adjust number of PEMs used
 
-      # names1 <- colnames(data)[colnames(data) %in% colnames(trait_data)]
-      #
-      # names2 <- paste("eig", 1:hyper_grid$PEMs[i], sep = "")
+      names1 <- colnames(data)[colnames(data) %in% colnames(trait_data)]
+
+      names2 <- paste("eig", 1:hyper_grid$PEMs[i], sep = "")
+
+      data <- data[colnames(data) %in% c(names1, names2)]
 
       fit <- ranger::ranger(formula = formula,
                             data = data,
@@ -111,11 +135,20 @@ opitmized_RF_function <- function(data,
       # export OOB error
       rmse[i] <- fit$prediction.error
       mtry[i] <- round(hyper_grid$mtry_frac[i]*n_features)
-      print(i)
+
+      final_objects <- data.frame(default_rmse = default_rmse,
+                                  rmse = rmse[i],
+                                  mtry = mtry[i])
+
+      return(final_objects)
 
     # }
 
     }, mc.cores = parallel::detectCores() - 1)
+
+  test2 <- do.call(rbind, test)
+
+
 
 
 
