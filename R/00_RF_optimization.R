@@ -1,4 +1,114 @@
-opitmized_RF <- function(response_data,trait_data,phylo_data,method,hyperparameter_list){
+
+
+#' Title
+#'
+#' @param response_data
+#' @param trait_data
+#' @param phylo_data
+#' @param method
+#' @param hyperparameter_list
+#'
+#' @return
+#' @export
+#'
+#' @examples
+
+data <- all
+response_data <- colnames(all)[2]
+species <- colnames(all)[1]
+trait_data <- colnames(all[colnames(cat)[-c(1:2)]])
+phylo_data <- colnames(ev400[-401])
+method <- "regression"
+hyperparameter_list <- expand.grid(
+  mtry_frac = c(.05, .15, .25, .333, .4, .6), #floor(n_features *
+  min.node.size = c(1, 3, 5, 10, 20, 30, 50, 75, 100),
+  replace = c(TRUE, FALSE),
+  sample.fraction = c(.5, .6, .7),
+  ntrees = seq(50,750,50),
+  PEMs = c(5,10,20),
+  mtry = NA,
+  rmse = NA,
+  wgt = c(1,2,3)
+)
+
+hyperparameter_list <- expand.grid(
+  mtry_frac = c(.05), #floor(n_features *
+  min.node.size = c(1),
+  replace = c(TRUE),
+  sample.fraction = c(.5),
+  ntrees = seq(50),
+  PEMs = c(5),
+  mtry = NA,
+  rmse = NA
+)
+
+hyper_grid <- hyperparameter_list
+
+opitmized_RF_function <- function(data,
+                                  species,
+                                  response_data,
+                                  trait_data,
+                                  phylo_data,
+                                  method, # binary or regression
+                                  hyperparameter_list,
+                                  weight)
+
+  {
+
+  n_features <- dim(data)[2]-2
+
+  formula <- as.formula(paste0(response_data, " ~ .-", species))
+
+  rf1 <- ranger::ranger(formula = formula,
+                        data = data,
+                        mtry = floor(n_features / 3),
+                        respect.unordered.factors = "order",
+                        seed = 123,
+                        case.weights = wgts.0)
+
+  default_rmse <- sqrt(rf1$prediction.error)
+
+  # execute full cartesian grid search, no weights assigned in this run
+  start_time <- Sys.time()
+
+  pbmcapply::pbmclapply(1 : seq_len(nrow(hyper_grid)), function(i) {
+
+    #adjust number of PEMs used
+    names1 <- names(all)[names(all)%in%names(cat)]
+    names2 <- paste("eig",1:hyper_grid$PEMs[i],sep="")
+
+
+
+
+
+  for(i in seq_len(nrow(hyper_grid))) {
+    #adjust number of PEMs used
+    names1 <- names(all)[names(all)%in%names(cat)]
+    names2 <- paste("eig",1:hyper_grid$PEMs[i],sep="")
+    allN <- all[,names(all)%in%c(names1,names2)]
+    n_features <- dim(allN)[2]-2. #names and response
+    # fit model for ith hyperparameter combination
+    fit <- ranger(
+      formula         = response ~ . -targetTaxonName,
+      data            = allN,
+      num.trees       = hyper_grid$ntrees[i],
+      mtry            = round(hyper_grid$mtry_frac[i]*n_features),
+      min.node.size   = hyper_grid$min.node.size[i],
+      replace         = hyper_grid$replace[i],
+      sample.fraction = hyper_grid$sample.fraction[i],
+      verbose         = FALSE,
+      seed            = 123,
+      respect.unordered.factors = 'order',
+      case.weights    = wgtlist[[hyper_grid$wgt[i]]]
+    )
+    # export OOB error
+    hyper_grid$rmse[i] <- fit$prediction.error
+    hyper_grid$mtry[i] <- round(hyper_grid$mtry_frac[i]*n_features)
+    print(i)
+  }
+
+
+
 
 
 }
