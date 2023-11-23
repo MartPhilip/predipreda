@@ -13,36 +13,49 @@
 #'
 #' @examples
 
+#get the data
+catm <- read.csv("data/raw-data/example_data.csv")
+ev400 <- readRDS("data/raw-data/bird_eig400.rds")
+IDn <- readRDS("data/raw-data/birdsID.rds")
+
+
+#fix the rownames and get rid of "_"
+IDn <- IDn[[2]]
+ev400$ID <- rownames(ev400)
+IDn$ID <- gsub(":",".", IDn$ID)
+ev400 <- merge(ev400, IDn, by="ID", all.x=T)
+cat <- catm[,!(names(catm)%in%c("X"))]
+names(cat)[names(cat)=="binomial"] <- "targetTaxonName"
+
+cat <- cat |>  dplyr::select(-volant,-Habitat,-ln.Beak.Depth,-ln.Beak.Length_Nares)
+all <- cat
+all$targetTaxonName <- gsub("_"," ", all$targetTaxonName)
+
+#add phylo eigenvectors
+ev400$ID <- NULL
+names(ev400)[names(ev400)=="sp"] <- "binomial"
+all <- merge(all, ev400, by.x ="targetTaxonName" ,by.y ="binomial", all.x=TRUE)
+all <- all[complete.cases(all),] #all complete
+all$response <- all$response/145
+
 data <- all
 response_data <- colnames(all)[2]
 species <- colnames(all)[1]
-trait_data <- colnames(all[colnames(cat)[-c(1:2)]])
+trait_data <- all[colnames(cat)[-c(1:2)]]
 phylo_data <- colnames(ev400[-401])
 method <- "regression"
-hyperparameter_list <- expand.grid(
-  mtry_frac = c(.05, .15, .25, .333, .4, .6), #floor(n_features *
-  min.node.size = c(1, 3, 5, 10, 20, 30, 50, 75, 100),
-  replace = c(TRUE, FALSE),
-  sample.fraction = c(.5, .6, .7),
-  ntrees = seq(50,750,50),
-  PEMs = c(5,10,20),
-  mtry = NA,
-  rmse = NA,
-  wgt = c(1,2,3)
-)
 
-hyperparameter_list <- expand.grid(
+hyper_grid <- expand.grid(
   mtry_frac = c(.05), #floor(n_features *
   min.node.size = c(1),
   replace = c(TRUE),
   sample.fraction = c(.5),
   ntrees = seq(50),
-  PEMs = c(5),
-  mtry = NA,
-  rmse = NA
+  PEMs = c(5)
 )
 
-hyper_grid <- hyperparameter_list
+wgts <- all$response
+wgts.0 <- rep(1,length(wgts))
 
 opitmized_RF_function <- function(data,
                                   species,
@@ -71,11 +84,42 @@ opitmized_RF_function <- function(data,
   # execute full cartesian grid search, no weights assigned in this run
   start_time <- Sys.time()
 
-  pbmcapply::pbmclapply(1 : seq_len(nrow(hyper_grid)), function(i) {
+  rmse <- vector()
+  mtry <- vector()
 
-    #adjust number of PEMs used
-    names1 <- names(all)[names(all)%in%names(cat)]
-    names2 <- paste("eig",1:hyper_grid$PEMs[i],sep="")
+  test <- pbmcapply::pbmclapply(1:nrow(hyper_grid), function(i) {
+
+    # if(hyperparameter_list == TRUE) {
+
+      #adjust number of PEMs used
+
+      names1 <- colnames(data)[colnames(data) %in% colnames(trait_data)]
+
+      names2 <- paste("eig", 1:hyper_grid$PEMs[i], sep = "")
+
+      fit <- ranger::ranger(formula = formula,
+                            data = data,
+                            num.trees = hyper_grid$ntrees[i],
+                            mtry = round(hyper_grid$mtry_frac[i]*n_features),
+                            min.node.size = hyper_grid$min.node.size[i],
+                            replace = hyper_grid$replace[i],
+                            sample.fraction = hyper_grid$sample.fraction[i],
+                            verbose = FALSE,
+                            seed = 123,
+                            respect.unordered.factors = 'order')
+
+      # export OOB error
+      rmse[i] <- fit$prediction.error
+      mtry[i] <- round(hyper_grid$mtry_frac[i]*n_features)
+      # print(i)
+
+    # }
+
+    }, parallel::detectCores() - 1)
+
+
+
+
 
 
 
