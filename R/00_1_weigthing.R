@@ -7,7 +7,8 @@
 #' @export
 #'
 #' @examples
-weight_scenarii_list <- function(Y_obs,weight_for_non_prey){
+weight_scenarii_list <- function(Y_obs,weight_for_non_prey=NULL){
+  if(!is.null(weight_for_non_prey)){weight_for_non_prey <- 0.5}
   prey <- length(Y_obs[Y_obs>0])
   non_prey <- length(Y_obs[Y_obs==0])
   weight_vector_null <- rep(1:length(Y_obs))
