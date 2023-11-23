@@ -1,2 +1,7 @@
 ^predipreda\.Rproj$
 ^\.Rproj\.user$
+^data/raw-data$
+^data/derived-data$
+^outputs$
+^figures$
+^analyses$
