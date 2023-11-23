@@ -1,3 +1,16 @@
+opitmized_RF <- function(response_data,trait_data,phylo_data,method,hyperparameter_list){
+
+
+}
+
+
+
+
+
+
+
+
+
 wgts <- all$response
 wgts.0 <- rep(1,length(wgts))
 ints <- length(wgts[wgts>0])
