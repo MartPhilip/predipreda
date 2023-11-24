@@ -114,7 +114,7 @@ opitmized_RF_function <- function(data,
 
   }
 
-  n_features <- dim(data)[2]-2
+  n_features <- dim(data)[2] - 2
 
   formula <- as.formula(paste0(response_data, " ~ .-", species))
 
@@ -144,7 +144,7 @@ opitmized_RF_function <- function(data,
 
   optimized_parameter <- pbmcapply::pbmclapply(1:nrow(hyper_grid), function(i) {
 
-      if(phylo==TRUE){
+      if(phylo == TRUE){
 
       names1 <- colnames(data)[colnames(data) %in% colnames(trait_data)]
       names2 <- paste("eig", 1:hyper_grid$PEMs[i], sep = "")
@@ -152,35 +152,37 @@ opitmized_RF_function <- function(data,
 
       }
 
-      if(phylo==FALSE){
+      if(phylo == FALSE){
 
       data_new <- data
 
       }
-    n_features_new <- dim(data_new)[2]-2
-      fit <- ranger::ranger(formula = formula,
-                            data = data_new,
-                            num.trees = hyper_grid$ntrees[i],
-                            mtry = round(hyper_grid$mtry_frac[i]*n_features_new),
-                            min.node.size = hyper_grid$min.node.size[i],
-                            replace = hyper_grid$replace[i],
-                            sample.fraction = hyper_grid$sample.fraction[i],
-                            verbose = FALSE,
-                            seed = 123,
-                            respect.unordered.factors = 'order',
-                            case.weights = weight[[hyper_grid$wgt[i]]])
 
-      # export OOB error
-      rmse[i] <- fit$prediction.error
-      mtry[i] <- round(hyper_grid$mtry_frac[i]*n_features)
+    n_features_new <- dim(data_new)[2] - 2
 
-      final_objects <- data.frame(default_rmse = default_rmse,
-                                  rmse = rmse[i],
-                                  mtry = mtry[i])
+    fit <- ranger::ranger(formula = formula,
+                          data = data_new,
+                          num.trees = hyper_grid$ntrees[i],
+                          mtry = round(hyper_grid$mtry_frac[i]*n_features_new),
+                          min.node.size = hyper_grid$min.node.size[i],
+                          replace = hyper_grid$replace[i],
+                          sample.fraction = hyper_grid$sample.fraction[i],
+                          verbose = FALSE,
+                          seed = 123,
+                          respect.unordered.factors = 'order',
+                          case.weights = weight[[hyper_grid$wgt[i]]])
 
-      return(final_objects)
+    # export OOB error
+    rmse[i] <- fit$prediction.error
+    mtry[i] <- round(hyper_grid$mtry_frac[i]*n_features)
 
-    }, mc.cores = parallel::detectCores()-1)
+    final_objects <- data.frame(default_rmse = default_rmse,
+                                rmse = rmse[i],
+                                mtry = mtry[i])
+
+    return(final_objects)
+
+    }, mc.cores = parallel::detectCores() - 1)
 
   optimized_parameter_bind <- do.call(rbind, optimized_parameter)
 
