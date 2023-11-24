@@ -43,8 +43,14 @@ random_forest_quality <- function(data,
   Yobs_non_null <- Yobs[Yobs>0]
   threshold <- min(Yobs_non_null)
   if(classification){
-   Ypred_binary <- ifelse(Ypred >= 0.5 , 1, 0)
-   conf_matrix <- table(Observed = Yobs, Predicted = Ypred_binary)
+    Ypred_binary <- ifelse(Ypred >= threshold, 1, 0)
+    Ypred_binary <- as.factor(Ypred_binary)
+    Yobs_binary <- as.factor(Yobs_binary)
+    Ypred_binary <- factor(Ypred_binary,levels = c("0","1"))
+    Yobs_binary <- factor(Yobs_binary,levels = c("0","1"))
+    conf_matrix <- caret::confusionMatrix(reference = Yobs_binary, data = Ypred_binary)
+    conf_matrix <- conf_matrix[["table"]]
+    conf_matrix <- table(Observed = Yobs, Predicted = Ypred_binary)
    TP <- conf_matrix[2, 2]
    TN <- conf_matrix[1, 1]
    FP <- conf_matrix[1, 2]
@@ -60,12 +66,18 @@ random_forest_quality <- function(data,
                 Recall = recall,
                 Specificity = specificity,
                 F1_Score = f1_score,
-               MCC = mcc)
+               MCC = mcc,
+               rank = i)
    }
   else{
     Yobs_binary <- ifelse(Yobs>= threshold, 1, 0)
     Ypred_binary <- ifelse(Ypred >= threshold, 1, 0)
-    conf_matrix <- base::table(Observed = Yobs_binary, Predicted = Ypred_binary)
+    Ypred_binary <- as.factor(Ypred_binary)
+    Yobs_binary <- as.factor(Yobs_binary)
+    Ypred_binary <- factor(Ypred_binary,levels = c("0","1"))
+    Yobs_binary <- factor(Yobs_binary,levels = c("0","1"))
+    conf_matrix <- caret::confusionMatrix(reference = Yobs_binary, data = Ypred_binary)
+    conf_matrix <- conf_matrix[["table"]]
     TP <- conf_matrix[2, 2]
     TN <- conf_matrix[1, 1]
     FP <- conf_matrix[1, 2]
@@ -85,7 +97,8 @@ random_forest_quality <- function(data,
                 Specificity = specificity,
                 F1_Score = f1_score,
                 MCC = mcc,
-                R_squared = r_squared)
+                R_squared = r_squared,
+                rank = i)
    }
   result_list[[i]] <- result
   }
