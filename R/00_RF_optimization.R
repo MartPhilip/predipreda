@@ -20,7 +20,7 @@
 #'
 #' @examples
 
-opitmized_RF_function <- function(data,
+optimized_RF_function <- function(data,
                                   species,
                                   response_data,
                                   trait_data,
