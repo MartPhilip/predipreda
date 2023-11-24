@@ -68,7 +68,7 @@ hyperparameter_list <- NULL
 #' @param min.node.size By default, NULL, return a list of default values of minimum node size. Else, you define your own range of minimum node size value you want to optimize in a vector
 #' @param sample.fraction By default, NULL, return a list of default values of fraction of observations to sample. Else, you define your own range of observations to sample value you want to optimize in a vector
 #' @param ntrees By default, NULL, return a list of default values of number of trees. Else, you define your own range of number of trees you want to optimize in a vector
-#' @param wgt By default, NULL, return a list of default values of number of trees. Else, you define your own range of number of trees you want to optimize in a vector
+#' @param wgt By default, NULL, return a list of default values of number of weight. Else, you define your own range of number of weight you want to optimize in a vector
 #' @param PEMs
 #'
 #' @return
