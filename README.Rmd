@@ -77,19 +77,8 @@ library("predipreda")
 ## Get started
 
 For an overview of the main features of `predipreda`, please read the 
-[Get started](https://CyrilHaute.github.io/predipreda/articles/predipreda.html)
+[Get started](https://MartPhilip.github.io/predipreda/articles/predipreda.html)
 vignette.
-
-
-
-## Long-form documentations
-
-`predipreda` provides **{{ NUMBER OF VIGNETTES }}** vignettes to learn more about the package:
-
-- the [Get started](https://CyrilHaute.github.io/predipreda/articles/predipreda.html)
-vignette describes the core features of the package
-- **{{ LIST ADDITIONAL VIGNETTES }}**
-
 
 
 ## Citation
