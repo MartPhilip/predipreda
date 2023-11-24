@@ -24,7 +24,7 @@ build_hyperparameter_dataframe <- function(mtry_frac='NULL',
   if(!is.null(min.node.size)){min.node.size <- c(1, 3, 5, 10, 20, 30, 50, 75, 100)}
   if(!is.null(sample.fraction)){sample.fraction = c(.5, .6, .7)}
   if(!is.null(ntrees)){ntrees <-seq(50,750,50)}
-  if(!is.null(wgt)){wgt <- c(1)}
+  if(!is.null(wgt)){wgt <- c(1,2,3)}
   replace <- c(TRUE, FALSE)
   mtry <- NA
   rmse <- NA
@@ -42,7 +42,7 @@ build_hyperparameter_dataframe <- function(mtry_frac='NULL',
     if(!is.null(min.node.size)){min.node.size <- c(1, 3, 5, 10, 20, 30, 50, 75, 100)}
     if(!is.null(sample.fraction)){sample.fraction = c(.5, .6, .7)}
     if(!is.null(ntrees)){ntrees <-seq(50,750,50)}
-    if(!is.null(wgt)){wgt <- c(1)}
+    if(!is.null(wgt)){wgt <- c(1,2,3)}
     if(!is.null(PEMs)){PEMs <- c(1)}
     replace <- c(TRUE, FALSE)
     mtry <- NA
