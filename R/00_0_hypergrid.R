@@ -8,7 +8,7 @@
 #' @param PEMs a numeric vector
 #' @param phylo a Boolean TRUE or FALSE
 #'
-#' @return a dataframe which contain all Random Forest option combination
+#' @return  dataframe which contain all Random Forest option combination
 #'
 #' @export
 #'
