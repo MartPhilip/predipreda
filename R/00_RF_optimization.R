@@ -1,18 +1,5 @@
 
 
-#' Title
-#'
-#' @param response_data
-#' @param trait_data
-#' @param phylo_data
-#' @param method
-#' @param hyperparameter_list
-#'
-#' @return
-#' @export
-#'
-#' @examples
-
 #get the data
 catm <- read.csv("data/raw-data/example_data.csv")
 ev400 <- readRDS("data/raw-data/bird_eig400.rds")
@@ -68,29 +55,62 @@ wgts.0 <- rep(1,length(wgts))
 
 hyperparameter_list <- NULL
 
+#' opitmized_RF_function
+#'
+#' @param data A species_traits dataframe containing species traits and eigen values if the user use phylogenetic data
+#' @param species The name of the column corresponding to the species names in the @param data
+#' @param response_data The name of the column corresponding to the response in the @param data
+#' @param trait_data A dataframe containing only species trait data
+#' @param phylo_data By default, phylo_data = NULL, which return an expand grid without PEMs
+#' @param classification
+#' @param weight
+#' @param mtry_frac
+#' @param min.node.size
+#' @param sample.fraction
+#' @param ntrees
+#' @param wgt
+#' @param PEMs
+#'
+#' @return
+#' @export
+#'
+#' @examples
+
+classification = FALSE
+
 opitmized_RF_function <- function(data,
                                   species,
                                   response_data,
                                   trait_data,
                                   phylo_data = NULL,
-                                  method, # binary or regression
+                                  classification, # binary or regression
                                   weight,
-                                  mtry_frac='NULL',
-                                  min.node.size='NULL',
-                                  sample.fraction='NULL',
-                                  ntrees='NULL',
-                                  wgt='NULL',
-                                  PEMs='NULL')
+                                  mtry_frac = 'NULL',
+                                  min.node.size = 'NULL',
+                                  sample.fraction = 'NULL',
+                                  ntrees = 'NULL',
+                                  wgt = 'NULL',
+                                  PEMs = 'NULL')
 
   {
 
+  if(classification == TRUE) {
+
+    if(is.numeric(data[, response_data])) {
+
+      stop("You want to do classification but your data are numeric !")
+
+    }
+
+  }
+
   if(is.null(phylo_data)){
 
-    phylo<-FALSE
+    phylo <- FALSE
 
   }else{
 
-    phylo<-TRUE
+    phylo <- TRUE
 
   }
 
@@ -112,15 +132,16 @@ opitmized_RF_function <- function(data,
 
   rmse <- vector()
   mtry <- vector()
+
   hyper_grid <- build_hyperparameter_dataframe(
-      mtry_frac=mtry_frac,
-      min.node.size=min.node.size,
-      replace=replace,
-      sample.fraction=sample.fraction,
-      ntrees=ntrees,
-      PEMs=PEMs,
-      wgt=wgt,
-      phylo=phylo)
+      mtry_frac = mtry_frac,
+      min.node.size = min.node.size,
+      replace = replace,
+      sample.fraction = sample.fraction,
+      ntrees = ntrees,
+      PEMs = PEMs,
+      wgt = wgt,
+      phylo = phylo)
 
   optimized_parameter <- pbmcapply::pbmclapply(1:nrow(hyper_grid), function(i) {
 
