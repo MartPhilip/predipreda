@@ -27,12 +27,11 @@ trait_data <- data[colnames(data)[c(3:14)]]
 phylo_data <- data[colnames(data)[c(15:414)]]
 method <- "regression"
 
-RF <- opitmized_RF_function(data=data,species = species,trait_data = trait_data,
-                            phylo_data = phylo_data,method='regression',)
+wgts <- weight_scenarii_list(Y_obs=data$response,weight_for_non_prey = 0.2)
 
 
-data.trait <-
-data.phylo <-
+RF <- opitmized_RF_function(response_data=response_data, data=data,species = species,trait_data = trait_data,
+                            phylo_data = phylo_data,classification=FALSE,weight =wgts)
 
-wgts <- weight_scenarii_list(data$response,0.5)
-RF <- opitmized_RF_function()
+
+

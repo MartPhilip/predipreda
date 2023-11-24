@@ -136,7 +136,6 @@ opitmized_RF_function <- function(data,
   hyper_grid <- build_hyperparameter_dataframe(
       mtry_frac = mtry_frac,
       min.node.size = min.node.size,
-      replace = replace,
       sample.fraction = sample.fraction,
       ntrees = ntrees,
       PEMs = PEMs,
@@ -158,7 +157,7 @@ opitmized_RF_function <- function(data,
       data_new <- data
 
       }
-
+    n_features_new <- dim(data_new)[2]-2
       fit <- ranger::ranger(formula = formula,
                             data = data_new,
                             num.trees = hyper_grid$ntrees[i],
@@ -169,7 +168,7 @@ opitmized_RF_function <- function(data,
                             verbose = FALSE,
                             seed = 123,
                             respect.unordered.factors = 'order',
-                            case.weights = weight[[i]])
+                            case.weights = weight[[hyper_grid$wgt[i]]])
 
       # export OOB error
       rmse[i] <- fit$prediction.error
@@ -181,7 +180,7 @@ opitmized_RF_function <- function(data,
 
       return(final_objects)
 
-    }, mc.cores = parallel::detectCores() - 1)
+    }, mc.cores = parallel::detectCores()-1)
 
   optimized_parameter_bind <- do.call(rbind, optimized_parameter)
 
