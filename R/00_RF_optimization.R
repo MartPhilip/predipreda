@@ -62,13 +62,13 @@ hyperparameter_list <- NULL
 #' @param response_data The name of the column corresponding to the response in the @param data
 #' @param trait_data A dataframe containing only species trait data
 #' @param phylo_data By default, phylo_data = NULL, which return an expand grid without PEMs
-#' @param classification
-#' @param weight
-#' @param mtry_frac
-#' @param min.node.size
-#' @param sample.fraction
-#' @param ntrees
-#' @param wgt
+#' @param classification Can be eiter TRUE or FALSE. If TRUE, you want to perform a classification analyses, if FALSE, you want to perform a regression analyses
+#' @param weight A list containing vector as the same legnth of row in the data
+#' @param mtry_frac By default, NULL, return a list of default values of mtry. Else, you define your own range of mtry value you want to optimize in a vector
+#' @param min.node.size By default, NULL, return a list of default values of minimum node size. Else, you define your own range of minimum node size value you want to optimize in a vector
+#' @param sample.fraction By default, NULL, return a list of default values of fraction of observations to sample. Else, you define your own range of observations to sample value you want to optimize in a vector
+#' @param ntrees By default, NULL, return a list of default values of number of trees. Else, you define your own range of number of trees you want to optimize in a vector
+#' @param wgt By default, NULL, return a list of default values of number of trees. Else, you define your own range of number of trees you want to optimize in a vector
 #' @param PEMs
 #'
 #' @return
@@ -85,12 +85,12 @@ opitmized_RF_function <- function(data,
                                   phylo_data = NULL,
                                   classification, # binary or regression
                                   weight,
-                                  mtry_frac = 'NULL',
-                                  min.node.size = 'NULL',
-                                  sample.fraction = 'NULL',
-                                  ntrees = 'NULL',
-                                  wgt = 'NULL',
-                                  PEMs = 'NULL')
+                                  mtry_frac = NULL,
+                                  min.node.size = NULL,
+                                  sample.fraction = NULL,
+                                  ntrees = NULL,
+                                  wgt = NULL,
+                                  PEMs = NULL)
 
   {
 
@@ -123,7 +123,7 @@ opitmized_RF_function <- function(data,
                         mtry = floor(n_features / 3),
                         respect.unordered.factors = "order",
                         seed = 123,
-                        case.weights = wgts.0)
+                        case.weights = weight[[1]])
 
   default_rmse <- sqrt(rf1$prediction.error)
 
@@ -168,7 +168,8 @@ opitmized_RF_function <- function(data,
                             sample.fraction = hyper_grid$sample.fraction[i],
                             verbose = FALSE,
                             seed = 123,
-                            respect.unordered.factors = 'order')
+                            respect.unordered.factors = 'order',
+                            case.weights = weight[[i]])
 
       # export OOB error
       rmse[i] <- fit$prediction.error
