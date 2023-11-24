@@ -1,3 +1,22 @@
+#' Evaluating the quality of the different random forest model according to
+#' the hyperparameters select with optimized_RF_function
+#'
+#' @param data a dataframe
+#' @param species a string
+#' @param response_data a string
+#' @param trait_data a dataframe
+#' @param phylo_data a Boolean TRUE or FALSE
+#' @param classification  a Boolean TRUE or FALSE
+#' @param RF_optimized_dataset a dataframe
+#' @param until_which_model a numeric
+#'
+#' @return a list
+#' @export
+#'
+#' @examples
+#' #' \dontrun{
+#'XXX
+#' }
 random_forest_quality <- function(data,
                                   species,
                                   response_data,
