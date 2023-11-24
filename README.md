@@ -39,7 +39,7 @@ the Random Forest algorithm. It includes various objects the user can
 modify to choose the option she/he wants to test :
 
 - the **weight** you give to the predation interaction (e.g. give more
-  weight to predator than prey).
+  weight to prey than non-prey (no interactions recorded)).
 
 - the **eigen vector** data derived from phylogenetic trees.
 
@@ -61,7 +61,7 @@ if (!requireNamespace("remotes", quietly = TRUE)) {
 }
 
 ## Install < predipreda > from GitHub ----
-remotes::install_github("MartPhilip/predipreda")
+# remotes::install_github("MartPhilip/predipreda")
 ```
 
 Then you can attach the package `predipreda`:
