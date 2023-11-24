@@ -1,13 +1,13 @@
-#' Creation of a hyperparameter dataset to use in ranger function to optimize a random forest model
+#' Building an hyperparameter dataset to optimized random forest using ranger from ranger
 #'
-#' @param mtry_frac numeric vector of values
-#' @param min.node.size numeric vector of values
-#' @param sample.fraction numeric vector of values
-#' @param ntrees numeric vector of values
-#' @param wgt numeric vector of values
-#' @param PEMS numeric vector of values
-#' @param phylo TRUE or FALSE
-
+#' @param mtry_frac a numeric vector
+#' @param min.node.size a numeric vector
+#' @param sample.fraction a numeric vector
+#' @param ntrees a numeric vector
+#' @param weight_list a list of numeric vector
+#' @param PEMs a numeric vector
+#' @param phylo a Boolean TRUE or FALSE
+#'
 #' @return
 #' @export
 #'
@@ -50,5 +50,4 @@ build_hyperparameter_dataframe <- function(mtry_frac=NULL,
                                      PEMs=PEMs)
     return(hyper_grid)}
 }
-
 
