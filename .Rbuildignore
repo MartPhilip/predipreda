@@ -5,3 +5,5 @@
 ^outputs$
 ^figures$
 ^analyses$
+^README\.Rmd$
+^README\.html$
