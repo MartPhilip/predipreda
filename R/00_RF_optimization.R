@@ -1,60 +1,4 @@
 
-
-#get the data
-catm <- read.csv("data/raw-data/example_data.csv")
-ev400 <- readRDS("data/raw-data/bird_eig400.rds")
-IDn <- readRDS("data/raw-data/birdsID.rds")
-
-
-#fix the rownames and get rid of "_"
-IDn <- IDn[[2]]
-ev400$ID <- rownames(ev400)
-IDn$ID <- gsub(":",".", IDn$ID)
-ev400 <- merge(ev400, IDn, by="ID", all.x=T)
-cat <- catm[,!(names(catm)%in%c("X"))]
-names(cat)[names(cat)=="binomial"] <- "targetTaxonName"
-
-cat <- cat |>  dplyr::select(-volant,-Habitat,-ln.Beak.Depth,-ln.Beak.Length_Nares)
-all <- cat
-all$targetTaxonName <- gsub("_"," ", all$targetTaxonName)
-
-#add phylo eigenvectors
-ev400$ID <- NULL
-names(ev400)[names(ev400)=="sp"] <- "binomial"
-all <- merge(all, ev400, by.x ="targetTaxonName" ,by.y ="binomial", all.x=TRUE)
-all <- all[complete.cases(all),] #all complete
-all$response <- all$response/145
-
-data <- all
-response_data <- colnames(all)[2]
-species <- colnames(all)[1]
-trait_data <- all[colnames(cat)[-c(1:2)]]
-phylo_data <- colnames(ev400[-401])
-method <- "regression"
-
-# hyper_grid <- expand.grid(
-#   mtry_frac = c(.05, .15, .25), #floor(n_features *
-#   min.node.size = c(1, 3, 5),
-#   replace = c(TRUE),
-#   sample.fraction = c(.5),
-#   ntrees = seq(50),
-#   PEMs = c(5,10)
-# )
-
-# hyper_grid <- expand.grid(
-#   mtry_frac = c(.05), #floor(n_features *
-#   min.node.size = c(1),
-#   replace = c(TRUE),
-#   sample.fraction = c(.5),
-#   ntrees = seq(50),
-#   PEMs = c(5)
-# )
-
-wgts <- all$response
-wgts.0 <- rep(1,length(wgts))
-
-hyperparameter_list <- NULL
-
 #' opitmized_RF_function
 #'
 #' @param data A species_traits dataframe containing species traits and eigen values if the user use phylogenetic data
@@ -68,15 +12,13 @@ hyperparameter_list <- NULL
 #' @param min.node.size By default, NULL, return a list of default values of minimum node size. Else, you define your own range of minimum node size value you want to optimize in a vector
 #' @param sample.fraction By default, NULL, return a list of default values of fraction of observations to sample. Else, you define your own range of observations to sample value you want to optimize in a vector
 #' @param ntrees By default, NULL, return a list of default values of number of trees. Else, you define your own range of number of trees you want to optimize in a vector
-#' @param wgt By default, NULL, return a list of default values of number of trees. Else, you define your own range of number of trees you want to optimize in a vector
 #' @param PEMs
+#' @param cores Define the number of cores you want to use. By default, the number of cores is set to 1. For Windows user, keep number of cores to 1, or switch to linux/Mac OS.
 #'
-#' @return
+#' @return Return a dataframe
 #' @export
 #'
 #' @examples
-
-classification = FALSE
 
 opitmized_RF_function <- function(data,
                                   species,
@@ -89,7 +31,8 @@ opitmized_RF_function <- function(data,
                                   min.node.size = NULL,
                                   sample.fraction = NULL,
                                   ntrees = NULL,
-                                  PEMs = NULL)
+                                  PEMs = NULL,
+                                  cores = 1)
 
   {
 
@@ -112,8 +55,11 @@ opitmized_RF_function <- function(data,
     phylo <- TRUE
 
   }
+
   if(is.null(weight)){
-    weight <- weight_scenarii_list(data$response,0.2)
+
+    weight <- weight_scenarii_list(data$response, 0.2)
+
   }
 
   n_features <- dim(data)[2] - 2
@@ -184,7 +130,7 @@ opitmized_RF_function <- function(data,
 
     return(final_objects)
 
-    }, mc.cores = parallel::detectCores() - 1)
+    }, mc.cores = cores)
 
   optimized_parameter_bind <- do.call(rbind, optimized_parameter)
 
