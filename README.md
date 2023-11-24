@@ -74,26 +74,16 @@ library("predipreda")
 
 For an overview of the main features of `predipreda`, please read the
 [Get
-started](https://CyrilHaute.github.io/predipreda/articles/predipreda.html)
+started](https://MartPhilip.github.io/predipreda/articles/predipreda.html)
 vignette.
-
-## Long-form documentations
-
-`predipreda` provides **{{ NUMBER OF VIGNETTES }}** vignettes to learn
-more about the package:
-
-- the [Get
-  started](https://CyrilHaute.github.io/predipreda/articles/predipreda.html)
-  vignette describes the core features of the package
-- **{{ LIST ADDITIONAL VIGNETTES }}**
 
 ## Citation
 
 Please cite `predipreda` as:
 
-> Hautecoeur Cyril (2023) predipreda: An R package to **{{ TITLE }}**. R
-> package version 0.0.0.9000.
-> <https://github.com/CyrilHaute/predipreda/>
+> PHILIPPE-LESAFFRE Martin (2023) predipreda: An R package to **{{ TITLE
+> }}**. R package version 0.0.0.9000.
+> <https://github.com/MartPhilip/predipreda/>
 
 ## Contributing
 

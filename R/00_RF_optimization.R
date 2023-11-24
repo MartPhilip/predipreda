@@ -67,7 +67,7 @@ optimized_RF_function <- function(data,
 
   if(is.null(weight)){
 
-    weight <- weight_scenarii_list(data$response, 0.2)
+    weight <- weight_scenarii_list(data[,response_data], 0.5)
 
   }
 
