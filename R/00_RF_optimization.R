@@ -96,7 +96,7 @@ optimized_RF_function <- function(data,
       if(phylo == TRUE){
 
       names1 <- colnames(data)[colnames(data) %in% colnames(trait_data)]
-      names2 <- paste("eig", 1:hyper_grid$PEMs[i], sep = "")
+      names2 <- paste("Eig", 1:hyper_grid$PEMs[i], sep = "")
       data_new <- data[c(species, response_data, names1, names2)]
 
       }
