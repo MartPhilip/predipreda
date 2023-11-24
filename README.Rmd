@@ -85,9 +85,9 @@ vignette.
 
 Please cite `predipreda` as: 
 
-> Hautecoeur Cyril (`r format(Sys.Date(), "%Y")`) predipreda: An R 
+> PHILIPPE-LESAFFRE Martin (`r format(Sys.Date(), "%Y")`) predipreda: An R 
 package to **{{ TITLE }}**. R package version 0.0.0.9000. 
-<https://github.com/CyrilHaute/predipreda/>
+<https://github.com/MartPhilip/predipreda/>
 
 
 

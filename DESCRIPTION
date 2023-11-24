@@ -1,10 +1,17 @@
 Package: predipreda
-Title: What the Package Does (One Line, Title Case)
+Title: Predicting prey or predation pressure of a given predator in a new 
+environment using species trait and phylogeny with Random Forest
 Version: 0.0.0.9000
 Authors@R: 
-    person("Martin", "Philippe-Lesaffre", , "martin.philippe@ens-paris-saclay.fr", role = c("aut", "cre"),
+    person("Martin", "Philippe-Lesaffre", , "martin.philippe@ens-paris-saclay.fr"
+    , role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-1985-8758"))
-Description: What the package does (one paragraph).
+Description: This package was built to construct a user friendly workflow to help
+preople inferring new interaction between prey and predator. This workflow is based
+on traits and optionnaly phylogeny of prey species to predict these interactions. 
+The interation can be Boolean or continous pressure. It can be usefull to predict
+interaction of introduced predator species for which we have interaction data 
+on the native range but not on the invasive.
 License: GPL (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -17,6 +24,7 @@ Suggests:
     rmarkdown
 VignetteBuilder: knitr
 Imports: 
+    caret,
     pbmcapply,
     ranger,
     stats
