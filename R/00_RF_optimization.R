@@ -1,18 +1,5 @@
 
 
-#' Title
-#'
-#' @param response_data
-#' @param trait_data
-#' @param phylo_data
-#' @param method
-#' @param hyperparameter_list
-#'
-#' @return
-#' @export
-#'
-#' @examples
-
 #get the data
 catm <- read.csv("data/raw-data/example_data.csv")
 ev400 <- readRDS("data/raw-data/bird_eig400.rds")
@@ -68,29 +55,62 @@ wgts.0 <- rep(1,length(wgts))
 
 hyperparameter_list <- NULL
 
+#' opitmized_RF_function
+#'
+#' @param data A species_traits dataframe containing species traits and eigen values if the user use phylogenetic data
+#' @param species The name of the column corresponding to the species names in the @param data
+#' @param response_data The name of the column corresponding to the response in the @param data
+#' @param trait_data A dataframe containing only species trait data
+#' @param phylo_data By default, phylo_data = NULL, which return an expand grid without PEMs
+#' @param classification Can be eiter TRUE or FALSE. If TRUE, you want to perform a classification analyses, if FALSE, you want to perform a regression analyses
+#' @param weight A list containing vector as the same legnth of row in the data
+#' @param mtry_frac By default, NULL, return a list of default values of mtry. Else, you define your own range of mtry value you want to optimize in a vector
+#' @param min.node.size By default, NULL, return a list of default values of minimum node size. Else, you define your own range of minimum node size value you want to optimize in a vector
+#' @param sample.fraction By default, NULL, return a list of default values of fraction of observations to sample. Else, you define your own range of observations to sample value you want to optimize in a vector
+#' @param ntrees By default, NULL, return a list of default values of number of trees. Else, you define your own range of number of trees you want to optimize in a vector
+#' @param wgt By default, NULL, return a list of default values of number of trees. Else, you define your own range of number of trees you want to optimize in a vector
+#' @param PEMs
+#'
+#' @return
+#' @export
+#'
+#' @examples
+
+classification = FALSE
+
 opitmized_RF_function <- function(data,
                                   species,
                                   response_data,
                                   trait_data,
                                   phylo_data = NULL,
-                                  method, # binary or regression
+                                  classification, # binary or regression
                                   weight,
-                                  mtry_frac='NULL',
-                                  min.node.size='NULL',
-                                  sample.fraction='NULL',
-                                  ntrees='NULL',
-                                  wgt='NULL',
-                                  PEMs='NULL')
+                                  mtry_frac = NULL,
+                                  min.node.size = NULL,
+                                  sample.fraction = NULL,
+                                  ntrees = NULL,
+                                  wgt = NULL,
+                                  PEMs = NULL)
 
   {
 
+  if(classification == TRUE) {
+
+    if(is.numeric(data[, response_data])) {
+
+      stop("You want to do classification but your data are numeric !")
+
+    }
+
+  }
+
   if(is.null(phylo_data)){
 
-    phylo<-FALSE
+    phylo <- FALSE
 
   }else{
 
-    phylo<-TRUE
+    phylo <- TRUE
 
   }
 
@@ -103,7 +123,7 @@ opitmized_RF_function <- function(data,
                         mtry = floor(n_features / 3),
                         respect.unordered.factors = "order",
                         seed = 123,
-                        case.weights = wgts.0)
+                        case.weights = weight[[1]])
 
   default_rmse <- sqrt(rf1$prediction.error)
 
@@ -112,15 +132,16 @@ opitmized_RF_function <- function(data,
 
   rmse <- vector()
   mtry <- vector()
+
   hyper_grid <- build_hyperparameter_dataframe(
-      mtry_frac=mtry_frac,
-      min.node.size=min.node.size,
-      replace=replace,
-      sample.fraction=sample.fraction,
-      ntrees=ntrees,
-      PEMs=PEMs,
-      wgt=wgt,
-      phylo=phylo)
+      mtry_frac = mtry_frac,
+      min.node.size = min.node.size,
+      replace = replace,
+      sample.fraction = sample.fraction,
+      ntrees = ntrees,
+      PEMs = PEMs,
+      wgt = wgt,
+      phylo = phylo)
 
   optimized_parameter <- pbmcapply::pbmclapply(1:nrow(hyper_grid), function(i) {
 
@@ -147,7 +168,8 @@ opitmized_RF_function <- function(data,
                             sample.fraction = hyper_grid$sample.fraction[i],
                             verbose = FALSE,
                             seed = 123,
-                            respect.unordered.factors = 'order')
+                            respect.unordered.factors = 'order',
+                            case.weights = weight[[i]])
 
       # export OOB error
       rmse[i] <- fit$prediction.error
