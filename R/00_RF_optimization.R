@@ -19,8 +19,17 @@
 #' @export
 #'
 #' @examples
+<<<<<<< HEAD
 #'
 #'
+=======
+#' data <- load(dataset)
+#' species <- colnames(data$Species_ID)
+#' response_data <- colnames(data$Response)
+#' trait_data <- data[,c(2:5)]
+#' results <- optimized_RF_function(data,species,response_data,trait_data,phylo_data = TRUE, classification == FALSE)
+#' ## ---- ##
+>>>>>>> 943ca9ae1a1a896a7227bb32ef734dbebdfd7380
 
 optimized_RF_function <- function(data,
                                   species,
