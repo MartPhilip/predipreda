@@ -2,7 +2,7 @@
 % Please edit documentation in R/00_0_hypergrid.R
 \name{build_hyperparameter_dataframe}
 \alias{build_hyperparameter_dataframe}
-\title{Creation of a hyperparameter dataset to use in ranger function to optimize a random forest model}
+\title{Building an hyperparameter dataset to optimized random forest using ranger from ranger}
 \usage{
 build_hyperparameter_dataframe(
   mtry_frac = NULL,
@@ -15,20 +15,47 @@ build_hyperparameter_dataframe(
 )
 }
 \arguments{
-\item{mtry_frac}{numeric vector of values}
+\item{mtry_frac}{a numeric vector}
 
-\item{min.node.size}{numeric vector of values}
+\item{min.node.size}{a numeric vector}
 
-\item{sample.fraction}{numeric vector of values}
+\item{sample.fraction}{a numeric vector}
 
-\item{ntrees}{numeric vector of values}
+\item{ntrees}{a numeric vector}
 
-\item{phylo}{TRUE or FALSE}
+\item{weight_list}{a list of numeric vector}
 
-\item{wgt}{numeric vector of values}
+\item{PEMs}{a numeric vector}
 
-\item{PEMS}{numeric vector of values}
+\item{phylo}{a Boolean TRUE or FALSE}
+}
+\value{
+a dataframe which contain all Random Forest option combination
 }
 \description{
-Creation of a hyperparameter dataset to use in ranger function to optimize a random forest model
+Building an hyperparameter dataset to optimized random forest using ranger from ranger
+}
+\examples{
+
+\dontrun{
+
+# First load the data
+
+library(predipreda)
+data(dataset)
+
+# The build_hyperparameter_dataframe function depends on the weight_scenarii_list function to generate a weight list
+
+weight_list <- weight_scenarii_list(dataset$Response)
+
+# Then, run the build_hyperparameter_dataframe function which return a dataframe. Each line of the dataframe is a combination of option for the Random Forest
+hyper_grid <- build_hyperparameter_dataframe(mtry_frac=NULL,
+                                             min.node.size=NULL,
+                                             sample.fraction=NULL,
+                                             ntrees=NULL,
+                                             weight_list=weight_list,
+                                             PEMs=NULL,
+                                             phylo = TRUE)
+
+}
 }

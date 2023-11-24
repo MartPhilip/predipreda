@@ -14,15 +14,18 @@
 #'
 #' @examples
 #'
-#' First load the data
+#' \dontrun{
 #'
-#' load("data/dataset.rda")
+#' # First load the data
 #'
-#' The build_hyperparameter_dataframe function depends on the weight_scenarii_list function to generate a weight list
+#' library(predipreda)
+#' data(dataset)
+#'
+#'# The build_hyperparameter_dataframe function depends on the weight_scenarii_list function to generate a weight list
 #'
 #' weight_list <- weight_scenarii_list(dataset$Response)
 #'
-#' Then, run the build_hyperparameter_dataframe function which return a dataframe. Each line of the dataframe is a combination of option for the Random Forest
+#' # Then, run the build_hyperparameter_dataframe function which return a dataframe. Each line of the dataframe is a combination of option for the Random Forest
 #
 #' hyper_grid <- build_hyperparameter_dataframe(mtry_frac=NULL,
 #'                                              min.node.size=NULL,
@@ -31,6 +34,8 @@
 #'                                              weight_list=weight_list,
 #'                                              PEMs=NULL,
 #'                                              phylo = TRUE)
+#'
+#'}
 
 build_hyperparameter_dataframe <- function(mtry_frac=NULL,
                                            min.node.size=NULL,

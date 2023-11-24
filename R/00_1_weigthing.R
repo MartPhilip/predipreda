@@ -7,14 +7,17 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #'
-#' First load the data
+#' # First load the data
 #'
-#' load("data/dataset.rda")
+#' library(predipreda)
+#' data(dataset)
 #'
-#' The weight_scenarii_list function generate a weight list. Each object of the list is a scenario, which is a vector of length equal to the lenght of the response. Hence, each object of the vector is a weight.
+#' # The weight_scenarii_list function generate a weight list. Each object of the list is a scenario, which is a vector of length equal to the lenght of the response. Hence, each object of the vector is a weight.
 #'
 #' weight_list <- weight_scenarii_list(dataset$Response)
+#' }
 
 weight_scenarii_list <- function(Y_obs,weight_for_non_prey=NULL){
   if(is.null(weight_for_non_prey)){weight_for_non_prey <- 0.5}

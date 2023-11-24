@@ -4,17 +4,32 @@
 \alias{random_forest_quality}
 \title{Computing metric of random forest quality based on the training data used for optimization}
 \usage{
-random_forest_quality(Yobs, Ypred, method, threshold = NULL)
+random_forest_quality(
+  data,
+  species,
+  response_data,
+  trait_data,
+  phylo_data = NULL,
+  classification,
+  RF_optimized_dataset,
+  threshold = NULL
+)
 }
 \arguments{
+\item{threshold}{numeric value}
+
 \item{Yobs}{numeric vector}
 
 \item{Ypred}{numeric vector}
 
 \item{method}{'regression' or 'classification'}
-
-\item{threshold}{numeric value}
+}
+\value{
+Quality of the model
 }
 \description{
 Computing metric of random forest quality based on the training data used for optimization
+}
+\examples{
+##---##
 }

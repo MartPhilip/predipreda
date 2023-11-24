@@ -7,3 +7,6 @@
 ^analyses$
 ^README\.Rmd$
 ^README\.html$
+^\.github$
+^temp$
+^LICENSE\.md$

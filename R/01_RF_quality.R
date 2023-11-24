@@ -5,10 +5,11 @@
 #' @param method 'regression' or 'classification'
 #' @param threshold numeric value
 #'
-#' @return
+#' @return Quality of the model
 #' @export
 #'
 #' @examples
+#' ##---##
 random_forest_quality <- function(data,
                                   species,
                                   response_data,

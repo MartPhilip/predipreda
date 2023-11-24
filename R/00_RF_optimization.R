@@ -12,24 +12,22 @@
 #' @param min.node.size By default, NULL, return a list of default values of minimum node size. Else, you define your own range of minimum node size value you want to optimize in a vector
 #' @param sample.fraction By default, NULL, return a list of default values of fraction of observations to sample. Else, you define your own range of observations to sample value you want to optimize in a vector
 #' @param ntrees By default, NULL, return a list of default values of number of trees. Else, you define your own range of number of trees you want to optimize in a vector
-#' @param PEMs
+#' @param PEMs ggg
 #' @param cores Define the number of cores you want to use. By default, the number of cores is set to 1. For Windows user, keep number of cores to 1, or switch to linux/Mac OS.
 #'
 #' @return Return a dataframe
 #' @export
 #'
 #' @examples
-<<<<<<< HEAD
-#'
-#'
-=======
-#' data <- load(dataset)
-#' species <- colnames(data$Species_ID)
-#' response_data <- colnames(data$Response)
-#' trait_data <- data[,c(2:5)]
-#' results <- optimized_RF_function(data,species,response_data,trait_data,phylo_data = TRUE, classification == FALSE)
-#' ## ---- ##
->>>>>>> 943ca9ae1a1a896a7227bb32ef734dbebdfd7380
+#' \dontrun{
+#' library(predipreda)
+#' data(dataset)
+#' species <- colnames(dataset$Species_ID)
+#' response_data <- colnames(dataset$Response)
+#' trait_data <- dataset[,c(2:5)]
+#' results <- optimized_RF_function(dataset,species,response_data,trait_data,phylo_data = TRUE, classification == FALSE)
+#' }
+
 
 optimized_RF_function <- function(data,
                                   species,
@@ -47,7 +45,7 @@ optimized_RF_function <- function(data,
 
   {
 
-  if(classification == TRUE) {
+  if(classification) {
 
     if(is.numeric(data[, response_data])) {
 
@@ -75,7 +73,7 @@ optimized_RF_function <- function(data,
 
   n_features <- dim(data)[2] - 2
 
-  formula <- as.formula(paste0(response_data, " ~ .-", species))
+  formula <- stats::as.formula(paste0(response_data, " ~ .-", species))
 
   rf1 <- ranger::ranger(formula = formula,
                         data = data,

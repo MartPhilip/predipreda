@@ -43,6 +43,8 @@ optimized_RF_function(
 
 \item{ntrees}{By default, NULL, return a list of default values of number of trees. Else, you define your own range of number of trees you want to optimize in a vector}
 
+\item{PEMs}{ggg}
+
 \item{cores}{Define the number of cores you want to use. By default, the number of cores is set to 1. For Windows user, keep number of cores to 1, or switch to linux/Mac OS.}
 }
 \value{
@@ -50,4 +52,14 @@ Return a dataframe
 }
 \description{
 opitmized_RF_function
+}
+\examples{
+\dontrun{
+library(predipreda)
+data(dataset)
+species <- colnames(dataset$Species_ID)
+response_data <- colnames(dataset$Response)
+trait_data <- dataset[,c(2:5)]
+results <- optimized_RF_function(dataset,species,response_data,trait_data,phylo_data = TRUE, classification == FALSE)
+}
 }

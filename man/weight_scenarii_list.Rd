@@ -11,6 +11,22 @@ weight_scenarii_list(Y_obs, weight_for_non_prey = NULL)
 
 \item{weight_for_non_prey}{numeric value}
 }
+\value{
+a list of scenarii. Each scenario is a vector of weights
+}
 \description{
 Creation of scenarii to weight the observation for modelisation with random forest
+}
+\examples{
+\dontrun{
+
+# First load the data
+
+library(predipreda)
+data(dataset)
+
+# The weight_scenarii_list function generate a weight list. Each object of the list is a scenario, which is a vector of length equal to the lenght of the response. Hence, each object of the vector is a weight.
+
+weight_list <- weight_scenarii_list(dataset$Response)
+}
 }
