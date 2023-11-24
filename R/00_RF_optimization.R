@@ -84,12 +84,11 @@ opitmized_RF_function <- function(data,
                                   trait_data,
                                   phylo_data = NULL,
                                   classification, # binary or regression
-                                  weight,
+                                  weight = NULL,
                                   mtry_frac = NULL,
                                   min.node.size = NULL,
                                   sample.fraction = NULL,
                                   ntrees = NULL,
-                                  wgt = NULL,
                                   PEMs = NULL)
 
   {
@@ -112,6 +111,9 @@ opitmized_RF_function <- function(data,
 
     phylo <- TRUE
 
+  }
+  if(is.null(weight)){
+    weight <- weight_scenarii_list(data$response,0.2)
   }
 
   n_features <- dim(data)[2] - 2
@@ -139,7 +141,7 @@ opitmized_RF_function <- function(data,
       sample.fraction = sample.fraction,
       ntrees = ntrees,
       PEMs = PEMs,
-      wgt = wgt,
+      weight_list = weight,
       phylo = phylo)
 
   optimized_parameter <- pbmcapply::pbmclapply(1:nrow(hyper_grid), function(i) {
