@@ -9,7 +9,14 @@
 #' @export
 #'
 #' @examples
-random_forest_quality <- function(Yobs,Ypred,method,threshold=NULL){
+random_forest_quality <- function(data,
+                                  species,
+                                  response_data,
+                                  trait_data,
+                                  phylo_data = NULL,
+                                  classification, # binary or regression
+                                  RF_optimized_dataset, #results of the optimized_RF_function()
+                                  threshold=NULL){
   if(!is.null(threshold)){threshold <- 0.5}
   if(method=='classification'){
    Ypred_binary <- ifelse(Ypred > threshold, 1, 0)
