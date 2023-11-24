@@ -19,6 +19,7 @@
 #' @export
 #'
 #' @examples
+#' ## ---- ##
 
 optimized_RF_function <- function(data,
                                   species,
